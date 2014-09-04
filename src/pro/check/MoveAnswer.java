@@ -248,7 +248,7 @@ public class MoveAnswer extends Thread
 			mRow_Answer.SetValueCell("AnswerTS", mSubObj.AnswerTS);
 			mRow_Answer.SetValueCell("AnswerTV", mSubObj.AnswerTV);
 			mRow_Answer.SetValueCell("ChargeMark", mSubObj.ChargeMark);
-			mRow_Answer.SetValueCell("ChargeMark", mSubObj.WeekMark);
+			mRow_Answer.SetValueCell("WeekMark", mSubObj.WeekMark);
 			mRow_Answer.SetValueCell("PID", mSubObj.PID);
 			mRow_Answer.SetValueCell("OrderID", mSubObj.OrderID);
 			mRow_Answer.SetValueCell("IsCompute", 0);

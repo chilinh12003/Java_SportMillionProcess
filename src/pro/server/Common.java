@@ -419,9 +419,9 @@ public class Common
 				Integer TempCount = (LocalConfig.MaxAnswerByDay - mSubObj.MOByDay);
 				MOCount = TempCount.toString();
 
-				DayMark = mSubObj.ChargeMark.toString();
-				WeekMark = mSubObj.WeekMark.toString();
-				DayCode = mSubObj.CodeByDay.toString();
+				DayMark = Integer.toString(mSubObj.ChargeMark);
+				WeekMark = Integer.toString(mSubObj.WeekMark);
+				DayCode = Integer.toString(mSubObj.CodeByDay);
 
 				Integer TempAnserCount = 0;
 
