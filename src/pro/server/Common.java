@@ -788,8 +788,13 @@ public class Common
 		mCal_End.set(Calendar.MILLISECOND, 0);
 		
 		mCal_Begin.set(mCal_Current.get(Calendar.YEAR), mCal_Current.get(Calendar.MONTH),
-				mCal_Current.get(Calendar.DATE), 0, 0, 1);
+				mCal_Current.get(Calendar.DATE), 0, 0, 0);
 
+		mCal_End.set(mCal_Current.get(Calendar.YEAR), mCal_Current.get(Calendar.MONTH),
+				mCal_Current.get(Calendar.DATE), 0, 0, 0);
+		
+		mCal_End.add(Calendar.DATE, 1);
+		
 		MyTableModel mTable = mNews.Select(3, News.NewsType.Reminder.GetValue().toString(), MyConfig
 				.Get_DateFormat_InsertDB().format(mCal_Begin.getTime()),
 				MyConfig.Get_DateFormat_InsertDB().format(mCal_End.getTime()));

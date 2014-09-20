@@ -13,7 +13,7 @@ import db.define.MyTableModel;
 
 public class CheckPushMT extends Thread
 {
-	MyLogger mLog = new MyLogger(LocalConfig.LogConfigPath,this.getClass().toString());
+	MyLogger mLog = new MyLogger(LocalConfig.LogConfigPath, this.getClass().toString());
 
 	public CheckPushMT()
 	{
@@ -37,7 +37,8 @@ public class CheckPushMT extends Thread
 					}
 
 					NewsObject mNewsObj = GetNews(News.NewsType.Push);
-					if (mNewsObj.IsNull()) continue;
+					if (mNewsObj.IsNull())
+						continue;
 
 					// Chạy thread Push tin
 					RunThreadPushMT(mNewsObj);
@@ -55,7 +56,8 @@ public class CheckPushMT extends Thread
 
 					NewsObject mNewsObj = GetNews(News.NewsType.Reminder);
 
-					if (mNewsObj.IsNull()) continue;
+					if (mNewsObj.IsNull())
+						continue;
 
 					// Chạy thread Push tin
 					RunThreadPushMT(mNewsObj);
@@ -93,7 +95,6 @@ public class CheckPushMT extends Thread
 
 			mTable.AddNewRow(mRow);
 			mNews.Update(1, mTable.GetXML());
-
 		}
 		catch (Exception ex)
 		{
@@ -120,7 +121,8 @@ public class CheckPushMT extends Thread
 			MyTableModel mTable = mNews.Select(2, News.Status.New.GetValue().toString(), mNewsType.GetValue()
 					.toString(), MyConfig.Get_DateFormat_InsertDB().format(mCal_Begin.getTime()), MyConfig
 					.Get_DateFormat_InsertDB().format(mCal_End.getTime()));
-			if (mTable.IsEmpty()) return mNewsObj;
+			if (mTable.IsEmpty())
+				return mNewsObj;
 			mNewsObj = NewsObject.Convert(mTable);
 		}
 		catch (Exception ex)
@@ -143,18 +145,34 @@ public class CheckPushMT extends Thread
 			mLog.log.debug("-------------------------");
 			mLog.log.debug("Bat dau PUSH MT cho dich vu");
 
+			// Số bản tin ngắn của MT được push di
+			int ShortMTCount = mNewsObj.Content.length() / 160;
+			if (mNewsObj.Content.length() % 160 > 0)
+			{
+				ShortMTCount++;
+			}
+
+			int DelaySendMT = 0;
+
+			if (LocalConfig.PUSHMT_TPS > 0)
+			{
+				int TPS_Delay = (1000 / LocalConfig.PUSHMT_TPS) * LocalConfig.PUSHMT_PROCESS_NUMBER;
+				DelaySendMT = ShortMTCount * TPS_Delay;
+			}
+
 			for (int j = 0; j < LocalConfig.PUSHMT_PROCESS_NUMBER; j++)
 			{
 				PushMT mPushMT = new PushMT();
 
 				mPushMT.mPushMTObj.ProcessIndex = j;
 				mPushMT.mPushMTObj.ProcessNumber = LocalConfig.PUSHMT_PROCESS_NUMBER;
+				mPushMT.mPushMTObj.DelaySendMT = DelaySendMT;
 				mPushMT.mPushMTObj.RowCount = LocalConfig.PUSHMT_ROWCOUNT;
 				mPushMT.mPushMTObj.StartDate = Calendar.getInstance().getTime();
 				mPushMT.mPushMTObj.mNewsObj = mNewsObj;
 				mPushMT.setPriority(Thread.MAX_PRIORITY);
 				mPushMT.start();
-				Thread.sleep(500);
+				Thread.sleep(DelaySendMT);
 			}
 		}
 		catch (Exception ex)

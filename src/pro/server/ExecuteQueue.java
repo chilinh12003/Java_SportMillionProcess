@@ -130,7 +130,7 @@ public class ExecuteQueue extends Thread
 			String classname = "";
 			if (keyword.getClassname().startsWith("~"))
 			{
-				classname = "MyProcess.InvalidProcess";
+				classname = "pro.mo.InvalidProcess";
 
 				// Cau hinh tra loi luon
 				// $msgtype$info

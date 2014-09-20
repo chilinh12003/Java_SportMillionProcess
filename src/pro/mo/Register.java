@@ -109,14 +109,7 @@ public class Register extends ContentAbstract
 			if (mMTType == MTType.RegNewSuccess || mMTType == MTType.RegAgainSuccessFree
 					|| mMTType == MTType.RegAgainSuccessNotFree)
 			{
-				Calendar mCal_Begin = Calendar.getInstance();
-				Calendar mCal_End = Calendar.getInstance();
-
-				mCal_Begin.set(Calendar.MINUTE, 0);
-				mCal_Begin.set(Calendar.SECOND, 0);
-
-				mCal_End.set(Calendar.MINUTE, 59);
-				mCal_End.set(Calendar.SECOND, 59);
+				
 
 				Vector<NewsObject> mListNews = Common.Get_List_Two_News();
 
@@ -413,7 +406,7 @@ public class Register extends ContentAbstract
 			}
 
 			// Lấy đối tác dựa vào Keyword.
-			PartnerID = mKeyword.GetPartnerID(msgObject.getKeyword());
+			PartnerID = mKeyword.GetPartnerID(msgObject.getUsertext());
 
 			/*
 			 * if (mMatchObj.IsNull()) {

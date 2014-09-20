@@ -504,7 +504,6 @@ public class ChargeRenew extends Thread
 			{
 				MyLogger.WriteDataLog(LocalConfig.LogDataFolder, "_Charge_NotUpdateDB", "LIST RECORD --> " + XML);
 			}
-
 		}
 		catch (Exception ex)
 		{

@@ -23,7 +23,7 @@ import db.define.MyTableModel;
 
 public class PushMT extends Thread
 {
-	MyLogger mLog = new MyLogger(LocalConfig.LogConfigPath,this.getClass().toString());
+	MyLogger mLog = new MyLogger(LocalConfig.LogConfigPath, this.getClass().toString());
 
 	public PushMTObject mPushMTObj = new PushMTObject();
 
@@ -130,6 +130,7 @@ public class PushMT extends Thread
 						{
 							mLog.log.info("Pust MT Fail -->MSISDN:" + mSubObj.MSISDN + "|NewsID:"
 									+ mPushMTObj.mNewsObj.NewsID);
+
 							MyLogger.WriteDataLog(LocalConfig.LogDataFolder, "_PushMT_NotSend",
 									"PUSH MT FAIL --> MSISDN:" + mSubObj.MSISDN + "|NewsID:"
 											+ mPushMTObj.mNewsObj.NewsID);
@@ -139,9 +140,11 @@ public class PushMT extends Thread
 							mLog.log.info("Pust MT OK -->MSISDN:" + mSubObj.MSISDN + "|NewsID:"
 									+ mPushMTObj.mNewsObj.NewsID);
 						}
-						if(LocalConfig.TIME_DELAY_PUSH_MT > 0)
+						
+						if(mPushMTObj.DelaySendMT > 0)
 						{
-							Thread.sleep(LocalConfig.TIME_DELAY_PUSH_MT);
+							mLog.log.info("PushMT Delay: " + Integer.toString(mPushMTObj.DelaySendMT));
+							Thread.sleep(mPushMTObj.DelaySendMT);
 						}
 					}
 					Insert_MOLog();
@@ -216,7 +219,8 @@ public class PushMT extends Thread
 	{
 		try
 		{
-			if (mTable_MOLog.IsEmpty()) return;
+			if (mTable_MOLog.IsEmpty())
+				return;
 			mMOLog.Insert(0, mTable_MOLog.GetXML());
 			mTable_MOLog.Clear();
 		}

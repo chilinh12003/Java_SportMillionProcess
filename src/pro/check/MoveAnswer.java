@@ -122,7 +122,7 @@ public class MoveAnswer extends Thread
 						{
 							AddToSub(mSubObj);
 							// nếu là đăng ký trong ngày thì không tiến
-							// hành tạo mã
+							// hành
 							continue;
 						}
 
@@ -134,10 +134,18 @@ public class MoveAnswer extends Thread
 							continue;
 						}
 
+						//Nếu là thứ 2 và khoảng thời gian là từ 0h-3h sáng thì reset lại điểm trong tuần
+						Integer DayOfWeek = Calendar.getInstance().get(Calendar.DAY_OF_WEEK);
+						
+						if(DayOfWeek == Calendar.TUESDAY)
+						{
+							mSubObj.WeekMark = 0;
+						}
+						
 						TotalCount++;
 						AddToAnswer(mSubObj);
-
 						AddToSub(mSubObj);
+						
 					}
 					
 					mLog.log.debug("Move to Answer thanh cong cho " + TotalCount + " Thue bao ProcessIndex:"
@@ -176,13 +184,6 @@ public class MoveAnswer extends Thread
 	{
 		mSubObj.MOByDay = 0;
 		mSubObj.ChargeMark = 0;
-		//Nếu là thứ 2 và khoảng thời gian là từ 0h-3h sáng thì reset lại điểm trong tuần
-		Integer DayOfWeek = Calendar.getInstance().get(Calendar.DAY_OF_WEEK);
-		Integer HourOfDay = Calendar.getInstance().get(Calendar.HOUR_OF_DAY);
-		if(DayOfWeek == 2 && HourOfDay >= 0  && HourOfDay <3)
-		{
-			mSubObj.WeekMark = 0;
-		}
 		
 		mSubObj.CodeByDay = 0;
 		mSubObj.MatchID = 0;

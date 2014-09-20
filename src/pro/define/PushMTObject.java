@@ -53,6 +53,11 @@ public class PushMTObject implements java.io.Serializable
 		else return false;
 	}
 
+	/**
+	 * Khoản thời gian delay cho mỗi lần gửi MT, đảm bảo ko bị mất MT nếu push quá nhanh
+	 */
+	public int DelaySendMT = 0; 
+	
 	public String GetLogString(String Suffix) throws Exception
 	{
 		try

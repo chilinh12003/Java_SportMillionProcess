@@ -26,6 +26,8 @@ public class LocalConfig
 	public static DBConfig mDBConfig_MSSQL = new DBConfig("MySQL");
 	public static DBConfig mDBConfig_MySQL = new DBConfig("MSSQL");
 
+	
+	
 	public static int NUM_THREAD = 10;
 	public static int NUM_THREAD_LOAD_MO = 2;
 	public static int NUM_THREAD_INSERTLOG = 1;
@@ -55,10 +57,8 @@ public class LocalConfig
 	 */
 	public static int TIME_DELAY_SEND_MT = 300;
 
-	/**
-	 * Thời gian delay để push mỗi MT
-	 */
-	public static int TIME_DELAY_PUSH_MT = 0;
+	
+	//public static int TIME_DELAY_PUSH_MT = 0;
 
 	public static Properties _prop;
 
@@ -137,7 +137,11 @@ public class LocalConfig
 	public static Integer PUSHMT_TIME_DELAY = 60;
 	public static Integer PUSHMT_PROCESS_NUMBER = 1;
 	public static Integer PUSHMT_ROWCOUNT = 10;
-
+	/**
+	 * Số lượng MT ngắn được push sang VInaphone trong vòng 1 giây
+	 */
+	public static int PUSHMT_TPS = 30;
+	
 	public static String[] MOVEANSWER_LIST_TIME = {"07"};
 	public static Integer MOVEANSWER_TIME_DELAY = 60;
 	public static Integer MOVEANSWER_PROCESS_NUMBER = 1;
@@ -204,7 +208,9 @@ public class LocalConfig
 
 			mDBConfig_MSSQL = new DBConfig(DBConfigPath, MSSQLPoolName);
 			mDBConfig_MySQL = new DBConfig(DBConfigPath, MySQLPoolName);
-
+			
+			
+			
 			NUM_THREAD = Integer.parseInt(properties.getProperty("NUM_THREAD", "10"));
 			NUM_THREAD_LOAD_MO = Integer.parseInt(properties.getProperty("NUM_THREAD_LOAD_MO", "2"));
 			LOAD_MO_MODE = properties.getProperty("LOAD_MO_MODE", "DB");
@@ -215,9 +221,9 @@ public class LocalConfig
 			TIME_DELAY_SEND_MT = Integer
 					.parseInt(properties.getProperty("TIME_DELAY_SEND_MT", "" + TIME_DELAY_SEND_MT));
 
-			TIME_DELAY_PUSH_MT = Integer
+			/*TIME_DELAY_PUSH_MT = Integer
 					.parseInt(properties.getProperty("TIME_DELAY_PUSH_MT", "" + TIME_DELAY_PUSH_MT));
-
+*/
 			String runclass = properties.getProperty("RUNCLASS", "");
 			RUNCLASS = parseString(runclass, ",");
 
@@ -305,7 +311,8 @@ public class LocalConfig
 			PUSHMT_ROWCOUNT = Integer.parseInt(properties.getProperty("PUSHMT_ROWCOUNT", PUSHMT_ROWCOUNT.toString()));
 			PUSHMT_PROCESS_NUMBER = Integer.parseInt(properties.getProperty("PUSHMT_PROCESS_NUMBER",
 					PUSHMT_PROCESS_NUMBER.toString()));
-
+			PUSHMT_TPS = Integer.parseInt(properties.getProperty("PUSHMT_TPS", Integer.toString(PUSHMT_TPS)));
+			
 			MOVEANSWER_LIST_TIME = properties.getProperty("MOVEANSWER_LIST_TIME", MOVEANSWER_LIST_TIME.toString())
 					.split("\\|");
 			MOVEANSWER_TIME_DELAY = Integer.parseInt(properties.getProperty("MOVEANSWER_TIME_DELAY",

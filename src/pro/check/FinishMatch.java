@@ -70,6 +70,7 @@ public class FinishMatch extends Thread
 				mMOLog = new MOLog(LocalConfig.mDBConfig_MSSQL);
 				mAnswerLog = new AnswerLog(LocalConfig.mDBConfig_MSSQL);
 				mAnswer = new Answer(LocalConfig.mDBConfig_MSSQL);
+				mSub = new Subscriber(LocalConfig.mDBConfig_MSSQL);
 
 				mTable_AnswerLog = mAnswerLog.Select(0);
 				mTable_MOLog = mMOLog.Select(0);
@@ -99,7 +100,7 @@ public class FinishMatch extends Thread
 				mFMObject.CurrentPID = PID;
 				mFMObject.MaxOrderID = 0;
 
-				mTable = GetSubscriber(PID);
+				mTable = GetAnswer(PID);
 
 				while (!mTable.IsEmpty())
 				{
@@ -192,12 +193,12 @@ public class FinishMatch extends Thread
 						AddToAnswerLog(mAnswerObj, ChargeMark, DayMark, MarkBT, MarkGB, MarkKQ, MarkTS, MarkTV,
 								TotalCode, WeekMark, 0);
 
-						// Không dự đoán thì không gửi MT thông báo
-						if (!mAnswerObj.AnswerBT.isEmpty() || !mAnswerObj.AnswerGB.isEmpty()
+						// Không dự đoán hoặc đã hủy thì không gửi MT thông báo
+						if ((!mAnswerObj.AnswerBT.isEmpty() || !mAnswerObj.AnswerGB.isEmpty()
 								|| !mAnswerObj.AnswerKQ.isEmpty() || !mAnswerObj.AnswerTS.isEmpty()
-								|| !mAnswerObj.AnswerTV.isEmpty())
+								|| !mAnswerObj.AnswerTV.isEmpty()) && !mAnswerObj.IsDeReg)
 						{
-							SendMT(mAnswerObj, DayMark, TotalCode, ChargeMark);
+							SendMT(mAnswerObj, DayMark, TotalCode, ChargeMark, WeekMark);
 						}
 						mAnswerObj.IsCompute = true;
 						mAnswerObj.ComputeDate = Calendar.getInstance().getTime();
@@ -206,7 +207,7 @@ public class FinishMatch extends Thread
 						AddToSub(mAnswerObj, WeekMark);
 						// }
 					}
-					mLog.log.debug("Tao MDT thanh cong cho " + TotalCount + " Thue bao ProcessIndex:"
+					mLog.log.debug("Tính diem thanh cong cho " + TotalCount + " Thue bao ProcessIndex:"
 							+ mFMObject.ProcessIndex);
 
 					UpdateToAnswer();
@@ -216,17 +217,16 @@ public class FinishMatch extends Thread
 					Insert_MOLog();
 
 					mTable.Clear();
-					mTable = GetSubscriber(PID);
-					
+					mTable = GetAnswer(PID);
+
 					UpdateToSub();
-					
 				}
 			}
 			return true;
 		}
 		catch (Exception ex)
 		{
-			mLog.log.debug("Loi trong Finish Match cho dich vu");
+			mLog.log.error("Loi trong Finish Match cho dich vu", ex);
 			throw ex;
 		}
 		finally
@@ -248,7 +248,7 @@ public class FinishMatch extends Thread
 		mRow.SetValueCell("MSISDN", mAnswerObj.MSISDN);
 		mRow.SetValueCell("PID", mAnswerObj.PID);
 		mRow.SetValueCell("WeekMark", WeekMark);
-		mTable_Answer.AddNewRow(mRow);
+		mTable_Sub.AddNewRow(mRow);
 
 	}
 
@@ -313,8 +313,8 @@ public class FinishMatch extends Thread
 		}
 	}
 
-	private boolean SendMT(AnswerObject mAnswerObj, Integer DayMark, Integer TotalCode, Integer ChargeMark)
-			throws Exception
+	private boolean SendMT(AnswerObject mAnswerObj, Integer DayMark, Integer TotalCode, Integer ChargeMark,
+			Integer WeekMark) throws Exception
 	{
 		// Diem tra loi
 		Integer AnswerMark = DayMark - mAnswerObj.ChargeMark;
@@ -328,6 +328,8 @@ public class FinishMatch extends Thread
 		MTContent = MTContent.replace("[TotalCode]", TotalCode.toString());
 		MTContent = MTContent.replace("[CodeDate]", mFMObject.mMatchObj.GetCodeDate());
 		MTContent = MTContent.replace("[ChargeMark]", ChargeMark.toString());
+		MTContent = MTContent.replace("[WeekMark]", WeekMark.toString());
+
 		String REQUEST_ID = Long.toString(System.currentTimeMillis());
 		if (Common.SendMT(mAnswerObj.MSISDN, "", MTContent, REQUEST_ID))
 		{
@@ -490,7 +492,7 @@ public class FinishMatch extends Thread
 	 * @return
 	 * @throws Exception
 	 */
-	public MyTableModel GetSubscriber(Integer PID) throws Exception
+	public MyTableModel GetAnswer(Integer PID) throws Exception
 	{
 		try
 		{
