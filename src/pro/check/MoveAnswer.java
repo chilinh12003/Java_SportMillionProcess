@@ -102,6 +102,14 @@ public class MoveAnswer extends Thread
 
 						mMoveObj.MaxOrderID = mSubObj.OrderID;
 
+						//Nếu là thứ 2 và khoảng thời gian là từ 0h-3h sáng thì reset lại điểm trong tuần
+						Integer DayOfWeek = Calendar.getInstance().get(Calendar.DAY_OF_WEEK);
+						
+						if(DayOfWeek == Calendar.TUESDAY)
+						{
+							mSubObj.WeekMark = 0;
+						}
+						
 						// Nếu đang là chargefaile thì không được tính
 						// điểm
 						if (mSubObj.StatusID == dat.sub.Subscriber.Status.ChargeFail.GetValue())
@@ -116,7 +124,7 @@ public class MoveAnswer extends Thread
 
 						// mCal_EffectDate.setTime(mSubObj.EffectiveDate);
 						mCal_ExpireDate.setTime(mSubObj.ExpiryDate);
-
+						
 						Long CountDay = MyDate.diffDays(mCal_ExpireDate, mCal_Current);
 						if (CountDay != 1)
 						{
@@ -125,7 +133,7 @@ public class MoveAnswer extends Thread
 							// hành
 							continue;
 						}
-
+						
 						if (mSubObj.ChargeMark == 0 && mSubObj.AnswerBT.isEmpty() && mSubObj.AnswerGB.isEmpty()
 								&& mSubObj.AnswerKQ.isEmpty() && mSubObj.AnswerTS.isEmpty()
 								&& mSubObj.AnswerTV.isEmpty())
@@ -134,13 +142,6 @@ public class MoveAnswer extends Thread
 							continue;
 						}
 
-						//Nếu là thứ 2 và khoảng thời gian là từ 0h-3h sáng thì reset lại điểm trong tuần
-						Integer DayOfWeek = Calendar.getInstance().get(Calendar.DAY_OF_WEEK);
-						
-						if(DayOfWeek == Calendar.TUESDAY)
-						{
-							mSubObj.WeekMark = 0;
-						}
 						
 						TotalCount++;
 						AddToAnswer(mSubObj);

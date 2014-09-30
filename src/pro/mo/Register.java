@@ -29,7 +29,7 @@ import db.define.MyTableModel;
 
 public class Register extends ContentAbstract
 {
-	MyLogger mLog = new MyLogger(LocalConfig.LogConfigPath,this.getClass().toString());
+	MyLogger mLog = new MyLogger(LocalConfig.LogConfigPath, this.getClass().toString());
 	Collection<MsgObject> ListMessOject = new ArrayList<MsgObject>();
 
 	MsgObject mMsgObject = null;
@@ -109,7 +109,6 @@ public class Register extends ContentAbstract
 			if (mMTType == MTType.RegNewSuccess || mMTType == MTType.RegAgainSuccessFree
 					|| mMTType == MTType.RegAgainSuccessNotFree)
 			{
-				
 
 				Vector<NewsObject> mListNews = Common.Get_List_Two_News();
 
@@ -119,10 +118,11 @@ public class Register extends ContentAbstract
 				{
 					for (NewsObject mNewObj : mListNews)
 					{
-						if (mNewObj.mNewsType == NewsType.Push) MTContent_Current_Push = mNewObj.Content;
+						if (mNewObj.mNewsType == NewsType.Push)
+							MTContent_Current_Push = mNewObj.Content;
 
-						if (mNewObj.mNewsType == NewsType.Reminder) MTContent_Current_Remider = mNewObj.Content;
-
+						if (mNewObj.mNewsType == NewsType.Reminder)
+							MTContent_Current_Remider = mNewObj.Content;
 					}
 				}
 
@@ -425,7 +425,8 @@ public class Register extends ContentAbstract
 			{
 				mTable_Sub = mUnSub.Select(2, PID.toString(), mMsgObject.getUserid());
 
-				if (mTable_Sub.GetRowCount() > 0) mSubObj = SubscriberObject.Convert(mTable_Sub, true);
+				if (mTable_Sub.GetRowCount() > 0)
+					mSubObj = SubscriberObject.Convert(mTable_Sub, true);
 			}
 
 			mSubObj.PID = MyConvert.GetPIDByMSISDN(mMsgObject.getUserid(), LocalConfig.MAX_PID);
