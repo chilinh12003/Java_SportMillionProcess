@@ -58,7 +58,7 @@ public class MoveAnswer extends Thread
 
 				mTable_Answer = mAnswer.Select(0);
 				mTable_Sub = mSub.Select(0);
-
+				
 				PushForEach();
 			}
 			catch (Exception ex)
@@ -258,7 +258,6 @@ public class MoveAnswer extends Thread
 				mRow_Answer.SetValueCell("LastUpdate", DateFormat_InsertDB.format(mSubObj.LastUpdate));
 
 			mTable_Answer.AddNewRow(mRow_Answer);
-
 		}
 		catch (Exception ex)
 		{
@@ -276,6 +275,7 @@ public class MoveAnswer extends Thread
 		}
 		catch (Exception ex)
 		{
+			MyLogger.WriteDataLog(LocalConfig.LogDataFolder, "_Insert_Answer_Fail", mTable_Answer.GetXML());
 			mLog.log.error(ex);
 		}
 		finally

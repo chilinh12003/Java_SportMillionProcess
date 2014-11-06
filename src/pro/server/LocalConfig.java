@@ -20,11 +20,13 @@ public class LocalConfig
 	public static String LogDataFolder = ".\\LogFile\\";
 
 	private static String DBConfigPath = "ProxoolConfig.xml";
-	private static String MySQLPoolName = "MySQL";
+	
 	private static String MSSQLPoolName = "MSSQL";
+	private static String MySQLPoolName = "MySQL";
+	
 
-	public static DBConfig mDBConfig_MSSQL = new DBConfig("MySQL");
-	public static DBConfig mDBConfig_MySQL = new DBConfig("MSSQL");
+	public static DBConfig mDBConfig_MSSQL = new DBConfig("MSSQL");
+	public static DBConfig mDBConfig_MySQL = new DBConfig("MySQL");
 
 	
 	

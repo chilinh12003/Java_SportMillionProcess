@@ -1,20 +1,71 @@
 package pro.check;
 
+import java.text.BreakIterator;
 import java.util.Calendar;
+
+import dat.service.Answer;
+import dat.service.AnswerObject;
+import db.define.MyTableModel;
 
 import pro.server.Program;
 import pro.server.LocalConfig;
+import uti.utility.MyDate;
 import uti.utility.MyLogger;
 
 public class CheckMoveAnswer extends Thread
 {
-	MyLogger mLog = new MyLogger(LocalConfig.LogConfigPath,this.getClass().toString());
+	MyLogger mLog = new MyLogger(LocalConfig.LogConfigPath, this.getClass().toString());
 
 	public CheckMoveAnswer()
 	{
 
 	}
 
+	/**
+	 * Kiểm tra xem MoveAnswer đã được chạy chưa
+	 * 
+	 * @return
+	 */
+	public boolean CheckAllowRun()
+	{
+		try
+		{
+			Answer mAnswer = new Answer(LocalConfig.mDBConfig_MSSQL);
+			MyTableModel mTable = mAnswer.Select(6);
+			if (mTable == null || mTable.GetRowCount() < 1)
+				return true;
+			AnswerObject mObjAnswer = new AnswerObject();
+			mObjAnswer = AnswerObject.Convert(mTable);
+
+			if (mObjAnswer.IsNull())
+			{
+				mAnswer.Truncate();
+				return true;
+			}
+			Calendar mCal_LastUpdate = Calendar.getInstance();
+			mCal_LastUpdate.setTime(mObjAnswer.LastUpdate);
+
+			long DayCount = MyDate.SubDate(Calendar.getInstance(), mCal_LastUpdate, Calendar.DATE);
+
+			if (DayCount == 0)
+			{
+				// đã chạy trong ngày --> ko cần chạy nữa
+				return false;
+			}
+			else
+			{
+				// trong hôm nay chưa chạy. vì truncate
+				mAnswer.Truncate();
+				return true;
+			}
+
+		}
+		catch (Exception ex)
+		{
+			mLog.log.error(ex);
+			return false;
+		}
+	}
 	public void run()
 	{
 		while (Program.processData)
@@ -31,8 +82,12 @@ public class CheckMoveAnswer extends Thread
 						continue;
 					}
 
-					// Chạy thread Push tin
-					RunThread();
+					if (CheckAllowRun())
+					{
+						// Chạy thread Push tin
+						RunThread();
+						break;
+					}
 				}
 
 			}
