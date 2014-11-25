@@ -60,6 +60,8 @@ public class Program extends Thread
 
 			LocalConfig.loadProperties(LocalConfig.ProcessConfigFile);
 
+			LocalConfig.mDBConfig_MSSQL.FisrtTestConnection();
+			
 			executequeue = new ExecuteQueue[LocalConfig.NUM_THREAD];
 			loadMO = new LoadMO[LocalConfig.NUM_THREAD_LOAD_MO];
 			insert_receive_log = new ExecuteInsertReceiveLog[LocalConfig.NUM_THREAD_INSERTLOG];
@@ -90,8 +92,7 @@ public class Program extends Thread
 
 	private void Init() throws Exception
 	{
-		System.out.println("Loading...");
-		LocalConfig.mDBConfig_MySQL.FisrtTestConnection();
+		System.out.println("Loading...");		
 		
 		// Tạo đối tượng lấy dữ liệu trong table Keyword_Config
 		// Mỗi 1 phút lại lấy 1 lần

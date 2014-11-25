@@ -20,16 +20,14 @@ public class LocalConfig
 	public static String LogDataFolder = ".\\LogFile\\";
 
 	private static String DBConfigPath = "ProxoolConfig.xml";
-	
+
+
 	private static String MSSQLPoolName = "MSSQL";
 	private static String MySQLPoolName = "MySQL";
-	
 
 	public static DBConfig mDBConfig_MSSQL = new DBConfig("MSSQL");
 	public static DBConfig mDBConfig_MySQL = new DBConfig("MySQL");
 
-	
-	
 	public static int NUM_THREAD = 10;
 	public static int NUM_THREAD_LOAD_MO = 2;
 	public static int NUM_THREAD_INSERTLOG = 1;
@@ -59,8 +57,7 @@ public class LocalConfig
 	 */
 	public static int TIME_DELAY_SEND_MT = 300;
 
-	
-	//public static int TIME_DELAY_PUSH_MT = 0;
+	// public static int TIME_DELAY_PUSH_MT = 0;
 
 	public static Properties _prop;
 
@@ -143,7 +140,7 @@ public class LocalConfig
 	 * Số lượng MT ngắn được push sang VInaphone trong vòng 1 giây
 	 */
 	public static int PUSHMT_TPS = 30;
-	
+
 	public static String[] MOVEANSWER_LIST_TIME = {"07"};
 	public static Integer MOVEANSWER_TIME_DELAY = 60;
 	public static Integer MOVEANSWER_PROCESS_NUMBER = 1;
@@ -208,10 +205,30 @@ public class LocalConfig
 			MySQLPoolName = properties.getProperty("MySQLPoolName", MySQLPoolName);
 			MSSQLPoolName = properties.getProperty("MSSQLPoolName", MSSQLPoolName);
 
-			mDBConfig_MSSQL = new DBConfig(DBConfigPath, MSSQLPoolName);
-			mDBConfig_MySQL = new DBConfig(DBConfigPath, MySQLPoolName);
-			
-			
+			int MSSQL_AutoSwitchConnection = Integer.parseInt(properties.getProperty("MSSQL_AutoSwitchConnection", "0"));
+			int MSSQL_MaxConnectionBackup = Integer.parseInt(properties.getProperty("MSSQL_MaxConnectionBackup", "0"));
+
+			if (MSSQL_AutoSwitchConnection == 0)
+			{
+				mDBConfig_MSSQL = new DBConfig(DBConfigPath, MSSQLPoolName);
+			}
+			else
+			{
+				mDBConfig_MSSQL = new DBConfig(DBConfigPath, MSSQLPoolName, true, MSSQL_MaxConnectionBackup);
+			}
+
+			int MySQL_AutoSwitchConnection = Integer.parseInt(properties.getProperty("MySQL_AutoSwitchConnection", "0"));
+			int MySQL_MaxConnectionBackup = Integer.parseInt(properties.getProperty("MySQL_MaxConnectionBackup", "0"));
+
+			if (MySQL_AutoSwitchConnection == 0)
+			{
+				mDBConfig_MySQL = new DBConfig(DBConfigPath, MySQLPoolName);
+			}
+			else
+			{
+				mDBConfig_MySQL = new DBConfig(DBConfigPath, MySQLPoolName, true, MySQL_MaxConnectionBackup);
+			}
+
 			
 			NUM_THREAD = Integer.parseInt(properties.getProperty("NUM_THREAD", "10"));
 			NUM_THREAD_LOAD_MO = Integer.parseInt(properties.getProperty("NUM_THREAD_LOAD_MO", "2"));
@@ -223,9 +240,11 @@ public class LocalConfig
 			TIME_DELAY_SEND_MT = Integer
 					.parseInt(properties.getProperty("TIME_DELAY_SEND_MT", "" + TIME_DELAY_SEND_MT));
 
-			/*TIME_DELAY_PUSH_MT = Integer
-					.parseInt(properties.getProperty("TIME_DELAY_PUSH_MT", "" + TIME_DELAY_PUSH_MT));
-*/
+			/*
+			 * TIME_DELAY_PUSH_MT = Integer
+			 * .parseInt(properties.getProperty("TIME_DELAY_PUSH_MT", "" +
+			 * TIME_DELAY_PUSH_MT));
+			 */
 			String runclass = properties.getProperty("RUNCLASS", "");
 			RUNCLASS = parseString(runclass, ",");
 
@@ -314,7 +333,7 @@ public class LocalConfig
 			PUSHMT_PROCESS_NUMBER = Integer.parseInt(properties.getProperty("PUSHMT_PROCESS_NUMBER",
 					PUSHMT_PROCESS_NUMBER.toString()));
 			PUSHMT_TPS = Integer.parseInt(properties.getProperty("PUSHMT_TPS", Integer.toString(PUSHMT_TPS)));
-			
+
 			MOVEANSWER_LIST_TIME = properties.getProperty("MOVEANSWER_LIST_TIME", MOVEANSWER_LIST_TIME.toString())
 					.split("\\|");
 			MOVEANSWER_TIME_DELAY = Integer.parseInt(properties.getProperty("MOVEANSWER_TIME_DELAY",

@@ -12,9 +12,20 @@
 		</driver-properties>
 		<maximum-connection-count>1000</maximum-connection-count>
 		<house-keeping-test-sql>select 1</house-keeping-test-sql>
-	</proxool>		
+	</proxool>	
 	<proxool>
 		<alias>MSSQL</alias>
+		<driver-url>jdbc:sqlserver://10.10.0.70:1433;DatabaseName=SportMillion</driver-url>
+		<driver-class>com.microsoft.sqlserver.jdbc.SQLServerDriver</driver-class>
+		<driver-properties>
+			<property name="user" value="linhnc" />
+			<property name="password" value="123456" />
+		</driver-properties>
+		<maximum-connection-count>1000</maximum-connection-count>
+		<house-keeping-test-sql>select 1</house-keeping-test-sql>
+	</proxool>
+	<proxool>
+		<alias>MSSQL1</alias>
 		<driver-url>jdbc:sqlserver://localhost:1433;DatabaseName=SportMillion</driver-url>
 		<driver-class>com.microsoft.sqlserver.jdbc.SQLServerDriver</driver-class>
 		<driver-properties>
@@ -23,5 +34,5 @@
 		</driver-properties>
 		<maximum-connection-count>1000</maximum-connection-count>
 		<house-keeping-test-sql>select 1</house-keeping-test-sql>
-	</proxool>	
+	</proxool>
 </something-else-entirely>
